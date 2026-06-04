@@ -60,6 +60,12 @@
 
                         @endif
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('employer.jobs.index') }}"
+                        class="nav-link text-white">
+                            Jobs
+                        </a>
+                    </li>
 
                 </ul>
 

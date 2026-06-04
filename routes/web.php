@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employer\CompanyController;
+use App\Http\Controllers\Employer\JobController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,7 +23,8 @@ Route::get('/admin-dashboard', function () {
 })->middleware('role:admin');
 Route::get('/employer/dashboard', function () {
     return view('employer.dashboard');
-})->middleware(['auth','role:employer']);
+})->middleware(['auth','role:employer'])
+  ->name('employer.dashboard');
 Route::middleware(['auth', 'role:employer'])
     ->prefix('employer')
     ->name('employer.')
@@ -43,7 +45,23 @@ Route::middleware(['auth', 'role:employer'])
             ->name('company.update');
 
         Route::delete('/company/delete', [CompanyController::class, 'destroy'])
-            ->name('company.delete');    
+            ->name('company.delete');
+        Route::get('/jobs', [JobController::class, 'index'])
+            ->name('jobs.index');
+
+        Route::get('/jobs/create', [JobController::class, 'create'])
+            ->name('jobs.create');
+
+        Route::post('/jobs/store', [JobController::class, 'store'])
+            ->name('jobs.store'); 
+        Route::get('/jobs/{job}/edit', [JobController::class,'edit'])
+            ->name('jobs.edit');
+
+        Route::put('/jobs/{job}', [JobController::class,'update'])
+            ->name('jobs.update');
+
+        Route::delete('/jobs/{job}', [JobController::class,'destroy'])
+            ->name('jobs.destroy');       
     });
 
 require __DIR__.'/auth.php';
