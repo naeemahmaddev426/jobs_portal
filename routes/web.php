@@ -33,6 +33,17 @@ Route::middleware(['auth', 'role:employer'])
 
         Route::post('/company/store', [CompanyController::class, 'store'])
             ->name('company.store');
+        Route::get('/company', [CompanyController::class, 'show'])
+            ->name('company.show');
+
+        Route::get('/company/edit', [CompanyController::class, 'edit'])
+            ->name('company.edit');
+
+        Route::put('/company/update', [CompanyController::class, 'update'])
+            ->name('company.update');
+
+        Route::delete('/company/delete', [CompanyController::class, 'destroy'])
+            ->name('company.delete');    
     });
 
 require __DIR__.'/auth.php';

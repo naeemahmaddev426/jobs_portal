@@ -44,10 +44,21 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ route('employer.company.create') }}"
-                            class="nav-link text-white {{ request()->routeIs('employer.company.*') ? 'fw-bold text-warning' : '' }}">
-                                Company
-                        </a>
+                        @if(auth()->user()->company)
+
+                            <a href="{{ route('employer.company.show') }}"
+                            class="nav-link text-white">
+                                Company Profile
+                            </a>
+
+                        @else
+
+                            <a href="{{ route('employer.company.create') }}"
+                            class="nav-link text-white">
+                                Create Company
+                            </a>
+
+                        @endif
                     </li>
 
                 </ul>
