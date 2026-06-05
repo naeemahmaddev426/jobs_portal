@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employer\CompanyController;
 use App\Http\Controllers\Employer\JobController;
+use App\Http\Controllers\JobListingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -63,5 +64,10 @@ Route::middleware(['auth', 'role:employer'])
         Route::delete('/jobs/{job}', [JobController::class,'destroy'])
             ->name('jobs.destroy');       
     });
+    Route::get('/jobs', [JobListingController::class, 'index'])
+    ->name('jobs.list');
+
+    Route::get('/jobs/{slug}', [JobListingController::class, 'show'])
+    ->name('jobs.show');
 
 require __DIR__.'/auth.php';
