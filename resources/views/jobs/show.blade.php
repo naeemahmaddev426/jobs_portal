@@ -20,6 +20,9 @@
                 <h1 class="fw-bold">
                     {{ $job->title }}
                 </h1>
+                <p class="text-secondary">
+                    🏢 {{ $job->company->company_name ?? 'Company Name' }}
+                </p>
 
                 <div class="mt-3">
 

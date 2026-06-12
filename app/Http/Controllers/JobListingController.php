@@ -6,11 +6,19 @@ use Illuminate\Http\Request;
 
 class JobListingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jobs = JobPost::where('status', 1)
-            ->latest()
-            ->get();
+        $jobs = JobPost::where('status', 1);
+
+        if ($request->filled('keyword')) {
+            $jobs->where('title', 'like', '%' . $request->keyword . '%');
+        }
+
+        if ($request->filled('location')) {
+            $jobs->where('location', 'like', '%' . $request->location . '%');
+        }
+
+        $jobs = $jobs->latest()->get();
 
         return view('jobs.index', compact('jobs'));
     }

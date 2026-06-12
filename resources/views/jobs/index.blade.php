@@ -10,32 +10,40 @@
             Find Your Dream Job Today
         </h1>
 
-```
     <p class="lead mt-3">
         Discover opportunities from top companies around Pakistan
     </p>
 
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-4">
-            <input type="text"
-                   class="form-control form-control-lg"
-                   placeholder="Job title">
+    <form action="{{ route('jobs.list') }}" method="GET">
+
+        <div class="row justify-content-center mt-4">
+
+            <div class="col-md-4">
+                <input type="text"
+                    name="keyword"
+                    class="form-control form-control-lg"
+                    placeholder="Job title"
+                    value="{{ request('keyword') }}">
+            </div>
+
+            <div class="col-md-3">
+                <input type="text"
+                    name="location"
+                    class="form-control form-control-lg"
+                    placeholder="Location"
+                    value="{{ request('location') }}">
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-warning btn-lg w-100">
+                    Search
+                </button>
+            </div>
+
         </div>
 
-        <div class="col-md-3">
-            <input type="text"
-                   class="form-control form-control-lg"
-                   placeholder="Location">
-        </div>
-
-        <div class="col-md-2">
-            <button class="btn btn-warning btn-lg w-100">
-                Search
-            </button>
-        </div>
-    </div>
+    </form>
 </div>
-```
 
 </section>
 
@@ -43,7 +51,6 @@
 
 <div class="row text-center mb-5">
 
-```
 <div class="col-md-4">
     <div class="card border-0 shadow-sm">
         <div class="card-body">
@@ -70,7 +77,6 @@
         </div>
     </div>
 </div>
-```
 
 </div>
 
@@ -84,9 +90,8 @@
 
 @foreach($jobs as $job)
 
-<div class="col-lg-4 col-md-6 mb-4">
+<div class="col-lg-6 col-xl-4 mb-4">
 
-```
 <div class="card border-0 shadow h-100">
 
     <div class="card-body">
@@ -98,6 +103,9 @@
         <h4 class="fw-bold">
             {{ $job->title }}
         </h4>
+        <p class="text-muted mb-2">
+            🏢 {{ $job->company->company_name ?? 'Company Name' }}
+        </p>
 
         <p class="text-muted mb-2">
             📍 {{ $job->location }}
@@ -117,7 +125,7 @@
     </div>
 
 </div>
-```
+
 
 </div>
 

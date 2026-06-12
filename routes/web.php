@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employer\CompanyController;
 use App\Http\Controllers\Employer\JobController;
 use App\Http\Controllers\JobListingController;
+use App\Http\Controllers\JobApplicationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -69,5 +70,13 @@ Route::middleware(['auth', 'role:employer'])
 
     Route::get('/jobs/{slug}', [JobListingController::class, 'show'])
     ->name('jobs.show');
+    Route::middleware(['auth'])->group(function () {
+
+        Route::post(
+                '/jobs/{job}/apply',
+                [JobApplicationController::class,'store']
+            )->name('jobs.apply');
+
+    });
 
 require __DIR__.'/auth.php';
