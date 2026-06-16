@@ -79,9 +79,10 @@
                     Submit your application now.
                 </p>
 
-                <button class="btn btn-success w-100">
-                    Apply Now
-                </button>
+                <a href="{{ route('jobs.apply.form',$job) }}"
+                    class="btn btn-success w-100">
+                        Apply Now
+                </a>
 
             </div>
 

@@ -72,10 +72,15 @@ Route::middleware(['auth', 'role:employer'])
     ->name('jobs.show');
     Route::middleware(['auth'])->group(function () {
 
+        Route::get(
+            '/jobs/{job}/apply',
+            [JobApplicationController::class,'create']
+        )->name('jobs.apply.form');
+
         Route::post(
-                '/jobs/{job}/apply',
-                [JobApplicationController::class,'store']
-            )->name('jobs.apply');
+            '/jobs/{job}/apply',
+            [JobApplicationController::class,'store']
+        )->name('jobs.apply');
 
     });
 

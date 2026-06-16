@@ -9,7 +9,10 @@ use App\Models\JobApplication;
 class JobApplicationController extends Controller
 {
    
-
+public function create(JobPost $job)
+{
+    return view('applications.create', compact('job'));
+}
 public function store(Request $request, JobPost $job)
 {
     $request->validate([
