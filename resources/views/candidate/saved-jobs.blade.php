@@ -35,76 +35,46 @@
             </div>
 
             <div class="saved-jobs-list">
-                <!-- Saved Job Item 1 -->
-                <div class="saved-job-card">
-                    <div class="job-logo">MS</div>
-                    <div class="job-details">
-                        <h5>Senior Full Stack Developer</h5>
-                        <p class="company-name">Microsoft</p>
-                        <div class="job-meta">
-                            <span><i class="fas fa-map-marker-alt"></i> Islamabad, Pakistan</span>
-                            <span><i class="fas fa-briefcase"></i> Full-time</span>
-                            <span><i class="fas fa-dollar-sign"></i> $120k - $180k/year</span>
+                @forelse($savedJobs as $savedJob)
+                    @php $job = $savedJob->job; @endphp
+                    <div class="saved-job-card">
+                        <div class="job-logo">{{ strtoupper(substr($job->company->company_name ?? 'Job', 0, 2)) }}</div>
+                        <div class="job-details">
+                            <h5>{{ $job->title }}</h5>
+                            <p class="company-name">{{ $job->company->company_name ?? 'Company' }}</p>
+                            <div class="job-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> {{ $job->location }}</span>
+                                <span><i class="fas fa-briefcase"></i> {{ ucfirst(str_replace('_', ' ', $job->job_type)) }}</span>
+                                <span><i class="fas fa-dollar-sign"></i> Rs {{ number_format($job->salary) }}</span>
+                            </div>
+                        </div>
+                        <div class="job-date">
+                            <p class="text-muted">Saved {{ $savedJob->created_at->diffForHumans() }}</p>
+                        </div>
+                        <div class="job-actions">
+                            <a href="{{ route('jobs.show', $job->slug) }}" class="btn btn-sm btn-primary">Apply Now</a>
+                            <form method="POST" action="{{ route('jobs.save', $job->id) }}" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove from saved">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
-                    <div class="job-date">
-                        <p class="text-muted">Saved 2 days ago</p>
+                @empty
+                    <div class="empty-state">
+                        <i class="fas fa-bookmark"></i>
+                        <h4>No saved jobs yet</h4>
+                        <p>Save jobs to review them later</p>
+                        <a href="{{ route('jobs.list') }}" class="btn btn-primary mt-3">Browse Jobs</a>
                     </div>
-                    <div class="job-actions">
-                        <button class="btn btn-sm btn-primary">Apply Now</button>
-                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
+                @endforelse
 
-                <!-- Saved Job Item 2 -->
-                <div class="saved-job-card">
-                    <div class="job-logo">GG</div>
-                    <div class="job-details">
-                        <h5>AI/ML Engineer</h5>
-                        <p class="company-name">Google</p>
-                        <div class="job-meta">
-                            <span><i class="fas fa-map-marker-alt"></i> Remote</span>
-                            <span><i class="fas fa-briefcase"></i> Full-time</span>
-                            <span><i class="fas fa-dollar-sign"></i> $150k - $250k/year</span>
-                        </div>
+                @if($savedJobs->hasPages())
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $savedJobs->links() }}
                     </div>
-                    <div class="job-date">
-                        <p class="text-muted">Saved 5 days ago</p>
-                    </div>
-                    <div class="job-actions">
-                        <button class="btn btn-sm btn-primary">Apply Now</button>
-                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-
-                <!-- Saved Job Item 3 -->
-                <div class="saved-job-card">
-                    <div class="job-logo">SE</div>
-                    <div class="job-details">
-                        <h5>DevOps Engineer</h5>
-                        <p class="company-name">Systems Ltd</p>
-                        <div class="job-meta">
-                            <span><i class="fas fa-map-marker-alt"></i> Karachi, Pakistan</span>
-                            <span><i class="fas fa-briefcase"></i> Full-time</span>
-                            <span><i class="fas fa-dollar-sign"></i> $80k - $120k/year</span>
-                        </div>
-                    </div>
-                    <div class="job-date">
-                        <p class="text-muted">Saved 1 week ago</p>
-                    </div>
-                    <div class="job-actions">
-                        <button class="btn btn-sm btn-primary">Apply Now</button>
-                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-
-                <!-- Empty State -->
-                <div class="empty-state" style="display: none;">
-                    <i class="fas fa-bookmark"></i>
-                    <h4>No saved jobs yet</h4>
-                    <p>Save jobs to review them later</p>
-                    <a href="{{ route('jobs.list') }}" class="btn btn-primary mt-3">Browse Jobs</a>
-                </div>
+                @endif
             </div>
         </div>
     </div>

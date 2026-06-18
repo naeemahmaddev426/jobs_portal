@@ -44,8 +44,8 @@
                         <i class="fas fa-users" style="color: #0369a1;"></i>
                     </div>
                     <h6>Total Users</h6>
-                    <h3>1,245</h3>
-                    <p class="text-muted">+32 this week</p>
+                    <h3>{{ $stats['users'] }}</h3>
+                    <p class="text-muted">Registered members</p>
                 </div>
 
                 <div class="stat-card">
@@ -53,8 +53,8 @@
                         <i class="fas fa-building" style="color: #166534;"></i>
                     </div>
                     <h6>Companies</h6>
-                    <h3>328</h3>
-                    <p class="text-muted">+12 this week</p>
+                    <h3>{{ $stats['companies'] }}</h3>
+                    <p class="text-muted">Active employers</p>
                 </div>
 
                 <div class="stat-card">
@@ -62,8 +62,8 @@
                         <i class="fas fa-briefcase" style="color: #b45309;"></i>
                     </div>
                     <h6>Active Jobs</h6>
-                    <h3>4,562</h3>
-                    <p class="text-muted">+145 this week</p>
+                    <h3>{{ $stats['jobs'] }}</h3>
+                    <p class="text-muted">Open positions</p>
                 </div>
 
                 <div class="stat-card">
@@ -71,8 +71,8 @@
                         <i class="fas fa-file-alt" style="color: #6d28d9;"></i>
                     </div>
                     <h6>Applications</h6>
-                    <h3>28,456</h3>
-                    <p class="text-muted">+2,340 this week</p>
+                    <h3>{{ $stats['applications'] }}</h3>
+                    <p class="text-muted">Total submissions</p>
                 </div>
             </div>
 
@@ -91,35 +91,23 @@
                                 <th>Email</th>
                                 <th>Role</th>
                                 <th>Joined</th>
-                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><strong>Ahmed Khan</strong></td>
-                                <td>ahmed@example.com</td>
-                                <td><span class="badge badge-info">Candidate</span></td>
-                                <td>June 15, 2026</td>
-                                <td><span class="status-active">Active</span></td>
-                                <td><button class="btn btn-xs btn-outline-dark">Edit</button></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Fatima Ahmed</strong></td>
-                                <td>fatima@example.com</td>
-                                <td><span class="badge badge-warning">Employer</span></td>
-                                <td>June 12, 2026</td>
-                                <td><span class="status-active">Active</span></td>
-                                <td><button class="btn btn-xs btn-outline-dark">Edit</button></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Mohammad Hassan</strong></td>
-                                <td>hassan@example.com</td>
-                                <td><span class="badge badge-info">Candidate</span></td>
-                                <td>June 10, 2026</td>
-                                <td><span class="status-active">Active</span></td>
-                                <td><button class="btn btn-xs btn-outline-dark">Edit</button></td>
-                            </tr>
+                            @forelse($recentUsers as $user)
+                                <tr>
+                                    <td><strong>{{ $user->name }}</strong></td>
+                                    <td>{{ $user->email }}</td>
+                                    <td><span class="badge {{ $user->role === 'candidate' ? 'badge-info' : ($user->role === 'employer' ? 'badge-warning' : 'badge-danger') }}">{{ ucfirst($user->role) }}</span></td>
+                                    <td>{{ $user->created_at->format('M d, Y') }}</td>
+                                    <td><button class="btn btn-xs btn-outline-dark">View</button></td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-3">No users yet</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

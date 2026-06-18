@@ -79,10 +79,28 @@
                     Submit your application now.
                 </p>
 
-                <a href="{{ route('jobs.apply.form',$job) }}"
-                    class="btn btn-success w-100">
-                        Apply Now
-                </a>
+                @auth
+                    <a href="{{ route('jobs.apply.form',$job) }}"
+                        class="btn btn-success w-100 mb-3">
+                            Apply Now
+                    </a>
+                    <form method="POST" action="{{ route('jobs.save', $job) }}" style="display: block;">
+                        @csrf
+                        @php $isSaved = auth()->user()->savedJobs()->where('job_post_id', $job->id)->exists(); @endphp
+                        <button type="submit" class="btn {{ $isSaved ? 'btn-warning' : 'btn-outline-warning' }} w-100">
+                            <i class="fas fa-heart"></i> {{ $isSaved ? 'Saved' : 'Save Job' }}
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="btn btn-success w-100 mb-3">
+                            Login to Apply
+                    </a>
+                    <a href="{{ route('register') }}"
+                        class="btn btn-outline-primary w-100">
+                            Register Now
+                    </a>
+                @endauth
 
             </div>
 

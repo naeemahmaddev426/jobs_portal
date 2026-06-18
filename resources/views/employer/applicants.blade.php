@@ -87,8 +87,23 @@
                         </div>
                         <div class="applicant-actions">
                             <a href="{{ route('jobs.show', $job->slug ?? '#') }}" class="btn btn-sm btn-primary">View Job</a>
-                            <button class="btn btn-sm btn-outline-success">Shortlist</button>
-                            <button class="btn btn-sm btn-outline-danger">Reject</button>
+                            @if($application->cv)
+                                <a href="{{ route('applications.download-cv', $application->id) }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-download"></i> CV
+                                </a>
+                            @endif
+                            @if($application->status === 'pending')
+                                <form method="POST" action="{{ route('applications.accept', $application->id) }}" style="display:inline;">
+                                    @csrf
+                                    <button class="btn btn-sm btn-success" type="submit">Accept</button>
+                                </form>
+                                <form method="POST" action="{{ route('applications.reject', $application->id) }}" style="display:inline;">
+                                    @csrf
+                                    <button class="btn btn-sm btn-danger" type="submit">Reject</button>
+                                </form>
+                            @else
+                                <button class="btn btn-sm btn-secondary" disabled>{{ ucfirst($application->status) }}</button>
+                            @endif
                         </div>
                     </div>
                 @empty

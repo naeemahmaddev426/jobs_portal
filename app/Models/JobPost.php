@@ -30,5 +30,10 @@ public function applications()
     return $this->hasMany(JobApplication::class);
 }
 
+public function savedBy()
+{
+    return $this->hasMany(SavedJob::class, 'job_post_id');
+}
+
 
 }

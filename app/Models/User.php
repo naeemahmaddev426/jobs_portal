@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->hasMany(JobApplication::class);
     }
 
+    public function savedJobs()
+    {
+        return $this->hasMany(SavedJob::class);
+    }
+
     public function hasRole(string $role): bool
     {
         return $this->role === $role;
