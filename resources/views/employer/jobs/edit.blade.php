@@ -63,7 +63,6 @@
                     {{ $job->job_type == 'remote' ? 'selected' : '' }}>
                     Remote
                 </option>
-
                 <option value="internship"
                     {{ $job->job_type == 'internship' ? 'selected' : '' }}>
                     Internship
