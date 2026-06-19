@@ -25,6 +25,10 @@ public function company()
 {
     return $this->belongsTo(Company::class);
 }
+public function category()
+{
+    return $this->belongsTo(JobCategory::class,'job_category_id');
+}
 public function applications()
 {
     return $this->hasMany(JobApplication::class);

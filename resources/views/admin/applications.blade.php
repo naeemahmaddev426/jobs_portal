@@ -1,4 +1,4 @@
-@extends('layouts.public')
+@extends('layouts.admin')
 
 @section('content')
 <div class="dashboard-wrapper">
@@ -53,19 +53,19 @@
             <div class="stats-mini-grid">
                 <div class="stat-mini">
                     <h6>Total Applications</h6>
-                    <h3>28,456</h3>
+                    <h3>{{ \App\Models\JobApplication::count() }}</h3>
                 </div>
                 <div class="stat-mini">
                     <h6>Applied (This Week)</h6>
-                    <h3>2,340</h3>
+                    <h3>{{ \App\Models\JobApplication::whereBetween('created_at',[now()->subWeek(), now()])->count() }}</h3>
                 </div>
                 <div class="stat-mini">
-                    <h6>Shortlisted</h6>
-                    <h3>5,234</h3>
+                    <h6>Pending</h6>
+                    <h3>{{ \App\Models\JobApplication::where('status','pending')->count() }}</h3>
                 </div>
                 <div class="stat-mini">
                     <h6>Rejected</h6>
-                    <h3>8,920</h3>
+                    <h3>{{ \App\Models\JobApplication::where('status','rejected')->count() }}</h3>
                 </div>
             </div>
 

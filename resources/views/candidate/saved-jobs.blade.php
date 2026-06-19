@@ -35,7 +35,7 @@
             </div>
 
             <div class="saved-jobs-list">
-                @forelse($savedJobs as $savedJob)
+                php artisan migrate                @forelse($savedJobs as $savedJob)
                     @php $job = $savedJob->job; @endphp
                     <div class="saved-job-card">
                         <div class="job-logo">{{ strtoupper(substr($job->company->company_name ?? 'Job', 0, 2)) }}</div>
@@ -58,7 +58,7 @@
                                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove from saved">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                            </form>
+                            </form>                            php artisan storage:link                            php artisan storage:link
                         </div>
                     </div>
                 @empty

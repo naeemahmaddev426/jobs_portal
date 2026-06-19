@@ -10,15 +10,19 @@
 <body>
 
 <nav class="navbar navbar-dark bg-primary">
-    <div class="container-fluid">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
 
-        <a class="navbar-brand">
+        <a class="navbar-brand text-white">
             Jobs Portal
         </a>
 
-        <span class="text-white">
-            {{ auth()->user()->name }}
-        </span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-white d-none d-md-inline">{{ auth()->user()->name }}</span>
+            <form method="POST" action="{{ route('logout') }}" class="m-0">
+                @csrf
+                <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+            </form>
+        </div>
 
     </div>
 </nav>

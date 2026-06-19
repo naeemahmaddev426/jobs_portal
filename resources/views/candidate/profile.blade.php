@@ -38,28 +38,28 @@
                 $applications = $applications ?? collect();
                 $stats = [
                     'applications' => $applications->count(),
-                    'shortlisted' => $applications->where('status', 'shortlisted')->count(),
+                    'pending' => $applications->where('status', 'pending')->count(),
                     'accepted' => $applications->where('status', 'accepted')->count(),
-                    'saved_jobs' => 0,
+                    'rejected' => $applications->where('status', 'rejected')->count(),
                 ];
             @endphp
 
             <div class="dashboard-overview">
                 <div class="overview-card">
                     <h2>{{ $stats['applications'] }}</h2>
-                    <p>Applications</p>
+                    <p>Applied Jobs</p>
                 </div>
                 <div class="overview-card">
-                    <h2>{{ $stats['shortlisted'] }}</h2>
-                    <p>Shortlisted</p>
+                    <h2>{{ $stats['pending'] }}</h2>
+                    <p>Pending</p>
                 </div>
                 <div class="overview-card">
                     <h2>{{ $stats['accepted'] }}</h2>
                     <p>Accepted</p>
                 </div>
                 <div class="overview-card">
-                    <h2>{{ $stats['saved_jobs'] }}</h2>
-                    <p>Saved Jobs</p>
+                    <h2>{{ $stats['rejected'] }}</h2>
+                    <p>Rejected</p>
                 </div>
             </div>
 

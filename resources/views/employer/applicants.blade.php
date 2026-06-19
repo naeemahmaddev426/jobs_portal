@@ -47,7 +47,7 @@
                 <select class="filter-select">
                     <option>All Statuses</option>
                     <option>New</option>
-                    <option>Shortlisted</option>
+                    <option>Pending</option>
                     <option>Reviewed</option>
                     <option>Rejected</option>
                 </select>
@@ -59,21 +59,23 @@
                         $candidate = $application->user;
                         $job = $application->job;
                         $statusClass = match($application->status) {
-                            'shortlisted' => 'status-shortlisted',
+                            'pending' => 'status-pending',
+                            'accepted' => 'status-accepted',
                             'rejected' => 'status-rejected',
-                            default => 'status-applied',
+                            default => 'status-pending',
                         };
                         $statusLabel = match($application->status) {
-                            'shortlisted' => 'Shortlisted',
+                            'pending' => 'Pending',
+                            'accepted' => 'Accepted',
                             'rejected' => 'Rejected',
-                            default => 'New',
+                            default => 'Pending',
                         };
                     @endphp
 
-                    <div class="applicant-card {{ $application->status == 'shortlisted' ? 'shortlisted' : ($application->status == 'rejected' ? 'rejected' : '') }}">
+                    <div class="applicant-card {{ $application->status == 'pending' ? 'pending' : ($application->status == 'rejected' ? 'rejected' : '') }}">
                         <div class="applicant-avatar">{{ strtoupper(substr($candidate->name ?? 'AP', 0, 2)) }}</div>
                         <div class="applicant-info">
-                            <h5>{{ $candidate->name ?? 'Candidate' }} <span class="badge {{ $application->status == 'shortlisted' ? 'badge-shortlisted' : ($application->status == 'rejected' ? 'badge-rejected' : '') }}">{{ $statusLabel }}</span></h5>
+                            <h5>{{ $candidate->name ?? 'Candidate' }} <span class="badge {{ $application->status == 'pending' ? 'badge-pending' : ($application->status == 'accepted' ? 'badge-accepted' : ($application->status == 'rejected' ? 'badge-rejected' : '')) }}">{{ $statusLabel }}</span></h5>
                             <p class="job-applied"><strong>{{ $job->title ?? 'Job unavailable' }}</strong></p>
                             <div class="applicant-meta">
                                 <span><i class="fas fa-envelope"></i> {{ $candidate->email ?? 'N/A' }}</span>
@@ -157,9 +159,9 @@
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
 }
 
-.applicant-card.shortlisted {
-    border-left-color: #16a34a;
-    background: #f0fdf4;
+.applicant-card.pending {
+    border-left-color: #f59e0b;
+    background: #fff7ed;
 }
 
 .applicant-card.rejected {
@@ -199,6 +201,16 @@
 .badge-rejected {
     background: #fee2e2;
     color: #991b1b;
+}
+
+.badge-pending {
+    background: #fff7ed;
+    color: #92400e;
+}
+
+.badge-accepted {
+    background: #dcfce7;
+    color: #166534;
 }
 
 .job-applied {

@@ -1,51 +1,26 @@
-@extends('layouts.public')
+@extends('layouts.employer')
 
 @section('content')
-<div class="dashboard-wrapper">
-    <div class="dashboard-container">
-        <!-- Sidebar Navigation -->
-        <div class="dashboard-sidebar">
-            <div class="profile-card-mini">
-                <div class="profile-avatar">EM</div>
-                <h6 class="mt-3">Your Company</h6>
-                <p class="text-muted small">Employer</p>
-            </div>
-
-            <nav class="sidebar-menu">
-                <a href="{{ route('employer.dashboard') }}" class="menu-item active">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-                <a href="{{ route('employer.company.show') }}" class="menu-item">
-                    <i class="fas fa-building"></i> Company Profile
-                </a>
-                <a href="{{ route('employer.jobs.create') }}" class="menu-item">
-                    <i class="fas fa-plus-circle"></i> Post Job
-                </a>
-                <a href="{{ route('employer.jobs.index') }}" class="menu-item">
-                    <i class="fas fa-briefcase"></i> Manage Jobs
-                </a>
-                <a href="{{ route('employer.applicants') }}" class="menu-item">
-                    <i class="fas fa-users"></i> View Applicants
-                </a>
-            </nav>
+<div class="mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+        <div>
+            <h1 class="h3 mb-1">Employer Dashboard</h1>
+            <p class="text-muted mb-0">Manage your job postings and applicants in one place.</p>
         </div>
+        <div>
+            <span class="badge bg-primary py-2 px-3 text-uppercase fs-6">{{ $company ? $company->name : 'No Company Created' }}</span>
+        </div>
+    </div>
+</div>
 
-        <!-- Main Content -->
-        <div class="dashboard-content">
-            <div class="page-header">
-                <h1>Employer Dashboard</h1>
-                <p class="text-muted">Manage your job postings and applicants</p>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="stats-grid">
+<div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon" style="background: #dbeafe;">
                         <i class="fas fa-briefcase" style="color: #0369a1;"></i>
                     </div>
                     <h6>Active Jobs</h6>
-                    <h3>12</h3>
-                    <p class="text-muted">Posted recently</p>
+                    <h3>{{ $jobs->count() }}</h3>
+                    <p class="text-muted">Open listings from your company.</p>
                 </div>
 
                 <div class="stat-card">
@@ -53,8 +28,8 @@
                         <i class="fas fa-file-alt" style="color: #166534;"></i>
                     </div>
                     <h6>Total Applications</h6>
-                    <h3>156</h3>
-                    <p class="text-muted">From all jobs</p>
+                    <h3>{{ $applications->count() }}</h3>
+                    <p class="text-muted">Submitted across all your jobs.</p>
                 </div>
 
                 <div class="stat-card">
@@ -62,8 +37,8 @@
                         <i class="fas fa-star" style="color: #b45309;"></i>
                     </div>
                     <h6>Shortlisted</h6>
-                    <h3>28</h3>
-                    <p class="text-muted">Pending review</p>
+                    <h3>{{ $applications->where('status', 'shortlisted')->count() }}</h3>
+                    <p class="text-muted">Candidates marked for review.</p>
                 </div>
 
                 <div class="stat-card">
@@ -71,8 +46,8 @@
                         <i class="fas fa-check" style="color: #3730a3;"></i>
                     </div>
                     <h6>Hired</h6>
-                    <h3>5</h3>
-                    <p class="text-muted">This month</p>
+                    <h3>{{ $applications->where('status', 'hired')->count() }}</h3>
+                    <p class="text-muted">Successful hires from your listings.</p>
                 </div>
             </div>
 
@@ -94,36 +69,31 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Senior Laravel Developer</strong></td>
-                                <td>June 14, 2026</td>
-                                <td><span class="badge badge-primary">28</span></td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <button class="btn btn-xs btn-outline-dark">Edit</button>
-                                    <button class="btn btn-xs btn-outline-danger">Close</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>DevOps Engineer</strong></td>
-                                <td>June 12, 2026</td>
-                                <td><span class="badge badge-primary">15</span></td>
-                                <td><span class="badge badge-success">Active</span></td>
-                                <td>
-                                    <button class="btn btn-xs btn-outline-dark">Edit</button>
-                                    <button class="btn btn-xs btn-outline-danger">Close</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>QA Engineer</strong></td>
-                                <td>June 10, 2026</td>
-                                <td><span class="badge badge-primary">32</span></td>
-                                <td><span class="badge badge-secondary">Closed</span></td>
-                                <td>
-                                    <button class="btn btn-xs btn-outline-dark">Reopen</button>
-                                </td>
-                            </tr>
+                                <tbody>
+                            @forelse($jobs as $job)
+                                <tr>
+                                    <td><strong>{{ $job->title }}</strong></td>
+                                    <td>{{ optional($job->created_at)->format('M d, Y') }}</td>
+                                    <td><span class="badge badge-primary">{{ $job->applications_count }}</span></td>
+                                    <td>
+                                        <span class="badge {{ $job->status ? 'badge-success' : 'badge-secondary' }}">
+                                            {{ $job->status ? 'Active' : 'Closed' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('employer.jobs.edit', $job) }}" class="btn btn-xs btn-outline-dark">Edit</a>
+                                        @if($job->status)
+                                            <a href="{{ route('employer.jobs.index') }}?close={{ $job->id }}" class="btn btn-xs btn-outline-danger">Close</a>
+                                        @else
+                                            <a href="{{ route('employer.jobs.index') }}?reopen={{ $job->id }}" class="btn btn-xs btn-outline-dark">Reopen</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">No jobs posted yet.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -137,35 +107,24 @@
                 </div>
 
                 <div class="applications-summary">
-                    <div class="app-item">
-                        <div class="app-avatar">AK</div>
-                        <div class="app-content">
-                            <h6>Ahmed Khan</h6>
-                            <p>Applied for <strong>Senior Laravel Developer</strong></p>
-                            <small class="text-muted">5 minutes ago</small>
+                    @forelse($recentApplications as $application)
+                        <div class="app-item">
+                            <div class="app-avatar">{{ strtoupper(substr($application->user->name, 0, 1)) }}{{ strtoupper(substr(explode(' ', $application->user->name)[1] ?? '', 0, 1)) }}</div>
+                            <div class="app-content">
+                                <h6>{{ $application->user->name }}</h6>
+                                <p>Applied for <strong>{{ $application->job->title ?? '—' }}</strong></p>
+                                <small class="text-muted">{{ optional($application->created_at)->diffForHumans() }}</small>
+                            </div>
+                            <a href="{{ route('employer.applicants') }}" class="btn btn-sm btn-primary">Review</a>
                         </div>
-                        <button class="btn btn-sm btn-primary">Review</button>
-                    </div>
-
-                    <div class="app-item">
-                        <div class="app-avatar">FA</div>
-                        <div class="app-content">
-                            <h6>Fatima Ahmed</h6>
-                            <p>Applied for <strong>DevOps Engineer</strong></p>
-                            <small class="text-muted">1 hour ago</small>
+                    @empty
+                        <div class="app-item justify-content-center text-center py-5">
+                            <div class="app-content">
+                                <h6 class="mb-2">No recent applications yet</h6>
+                                <p class="text-muted mb-0">Applicants will appear here once candidates apply to your jobs.</p>
+                            </div>
                         </div>
-                        <button class="btn btn-sm btn-primary">Review</button>
-                    </div>
-
-                    <div class="app-item">
-                        <div class="app-avatar">MH</div>
-                        <div class="app-content">
-                            <h6>Mohammad Hassan</h6>
-                            <p>Applied for <strong>Senior Laravel Developer</strong></p>
-                            <small class="text-muted">3 hours ago</small>
-                        </div>
-                        <button class="btn btn-sm btn-primary">Review</button>
-                    </div>
+                    @endforelse
                 </div>
             </div>
 
@@ -182,10 +141,10 @@
                         <p>Create a new job listing</p>
                     </a>
 
-                    <a href="{{ route('employer.company.edit') }}" class="action-card">
+                    <a href="{{ $company ? route('employer.company.edit') : route('employer.company.create') }}" class="action-card">
                         <i class="fas fa-edit"></i>
-                        <h6>Update Profile</h6>
-                        <p>Edit company information</p>
+                        <h6>{{ $company ? 'Update Profile' : 'Create Company' }}</h6>
+                        <p>{{ $company ? 'Edit company information' : 'Add your employer profile' }}</p>
                     </a>
 
                     <a href="{{ route('employer.applicants') }}" class="action-card">

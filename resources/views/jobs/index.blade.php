@@ -29,6 +29,16 @@
                             <option value="sales">Sales</option>
                         </select>
                     </div>
+                    <div class="search-field">
+                        <label for="job_type" class="sr-only">Job Type</label>
+                        <select id="job_type" name="job_type">
+                            <option value="">Job Type</option>
+                            <option value="full_time">Full Time</option>
+                            <option value="part_time">Part Time</option>
+                            <option value="contract">Contract</option>
+                            <option value="remote">Remote</option>
+                        </select>
+                    </div>
                     <button type="submit" class="search-btn">Search</button>
                 </div>
             </form>

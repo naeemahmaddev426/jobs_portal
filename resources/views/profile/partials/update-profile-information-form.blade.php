@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -49,6 +49,38 @@
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
+
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="photo" :value="__('Photo')" />
+            <input id="photo" name="photo" type="file" class="mt-1 block w-full" accept="image/*" />
+            <x-input-error class="mt-2" :messages="$errors->get('photo')" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="cv" :value="__('Upload CV')" />
+            <input id="cv" name="cv" type="file" class="mt-1 block w-full" accept=".pdf,.doc,.docx" />
+            <x-input-error class="mt-2" :messages="$errors->get('cv')" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="skills" :value="__('Skills (comma separated)')" />
+            <textarea id="skills" name="skills" class="mt-1 block w-full">{{ old('skills', $user->skills) }}</textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('skills')" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="education" :value="__('Education')" />
+            <textarea id="education" name="education" class="mt-1 block w-full">{{ old('education', $user->education) }}</textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('education')" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="experience" :value="__('Experience')" />
+            <textarea id="experience" name="experience" class="mt-1 block w-full">{{ old('experience', $user->experience) }}</textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('experience')" />
+        </div>
 
             @if (session('status') === 'profile-updated')
                 <p

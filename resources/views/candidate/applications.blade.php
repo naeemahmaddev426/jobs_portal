@@ -38,7 +38,7 @@
                 <select class="filter-select">
                     <option>All Applications</option>
                     <option>Applied</option>
-                    <option>Shortlisted</option>
+                    <option>Pending</option>
                     <option>Rejected</option>
                     <option>Accepted</option>
                 </select>
@@ -56,16 +56,16 @@
                         <div class="app-status">
                             @php
                                 $statusClass = match($application->status) {
-                                    'shortlisted' => 'status-shortlisted',
+                                    'pending' => 'status-pending',
                                     'rejected' => 'status-rejected',
                                     'accepted' => 'status-accepted',
-                                    default => 'status-applied',
+                                    default => 'status-pending',
                                 };
                                 $statusLabel = match($application->status) {
-                                    'shortlisted' => 'Shortlisted',
+                                    'pending' => 'Pending',
                                     'rejected' => 'Rejected',
                                     'accepted' => 'Accepted',
-                                    default => 'Applied',
+                                    default => 'Pending',
                                 };
                             @endphp
                             <span class="status-badge {{ $statusClass }}">{{ $statusLabel }}</span>
@@ -177,6 +177,11 @@
 .status-applied {
     background: #dbeafe;
     color: #0369a1;
+}
+
+.status-pending {
+    background: #fff7ed;
+    color: #92400e;
 }
 
 .status-shortlisted {

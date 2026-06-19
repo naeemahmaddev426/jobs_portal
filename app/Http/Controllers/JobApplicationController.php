@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\JobPost;
 use App\Models\JobApplication;
+use Illuminate\Support\Facades\Mail;
 
 class JobApplicationController extends Controller
 {
@@ -32,6 +33,15 @@ public function store(Request $request, JobPost $job)
         'cover_letter' => $request->cover_letter,
         'status' => 'pending'
     ]);
+
+    // Send confirmation email to candidate
+    try {
+        Mail::raw("Your application for {$job->title} has been received.", function ($msg) use ($request) {
+            $msg->to($request->user()->email)->subject('Application Received');
+        });
+    } catch (\Exception $e) {
+        // silent fail if mail not configured
+    }
 
     return back()->with(
         'success',

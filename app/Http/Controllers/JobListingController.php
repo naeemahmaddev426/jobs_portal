@@ -18,6 +18,16 @@ class JobListingController extends Controller
             $jobs->where('location', 'like', '%' . $request->location . '%');
         }
 
+        if ($request->filled('category')) {
+            $jobs->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        if ($request->filled('job_type')) {
+            $jobs->where('job_type', $request->job_type);
+        }
+
         $jobs = $jobs->latest()->get();
 
         return view('jobs.index', compact('jobs'));

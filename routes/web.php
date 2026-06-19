@@ -7,6 +7,7 @@ use App\Http\Controllers\JobListingController;
 use App\Http\Controllers\JobApplicationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 // ============================================================================
 // PUBLIC ROUTES - Accessible to all visitors
@@ -127,7 +128,22 @@ Route::middleware(['auth', 'role:employer'])
     ->group(function () {
         // Dashboard
         Route::get('/employer/dashboard', function () {
-            return view('employer.dashboard-enhanced');
+            $company = auth()->user()->company;
+            $jobs = collect();
+            $applications = collect();
+            $recentApplications = collect();
+
+            if ($company) {
+                $jobs = $company->jobs()->withCount('applications')->latest()->get();
+                $jobIds = $jobs->pluck('id');
+                $applications = \App\Models\JobApplication::with(['user', 'job'])
+                    ->whereIn('job_post_id', $jobIds)
+                    ->latest()
+                    ->get();
+                $recentApplications = $applications->take(5);
+            }
+
+            return view('employer.dashboard', compact('company', 'jobs', 'applications', 'recentApplications'));
         })->name('dashboard');
 
         // Applicants
@@ -170,6 +186,14 @@ Route::middleware(['auth', 'role:employer'])
                 $job = $application->job;
                 abort_if(!auth()->user()->company || $job->company_id !== auth()->user()->company->id, 403);
                 $application->update(['status' => 'accepted']);
+                // notify candidate
+                try {
+                    Mail::raw("Congratulations — your application for {$job->title} has been accepted.", function ($msg) use ($application) {
+                        $msg->to($application->user->email)->subject('Application Accepted');
+                    });
+                } catch (\Exception $e) {
+                }
+
                 return back()->with('status', 'Application accepted.');
             })->name('applications.accept');
 
@@ -177,6 +201,14 @@ Route::middleware(['auth', 'role:employer'])
                 $job = $application->job;
                 abort_if(!auth()->user()->company || $job->company_id !== auth()->user()->company->id, 403);
                 $application->update(['status' => 'rejected']);
+                // notify candidate
+                try {
+                    Mail::raw("Your application for {$job->title} has been updated to Rejected.", function ($msg) use ($application) {
+                        $msg->to($application->user->email)->subject('Application Status Updated');
+                    });
+                } catch (\Exception $e) {
+                }
+
                 return back()->with('status', 'Application rejected.');
             })->name('applications.reject');
 
